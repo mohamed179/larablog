@@ -133,15 +133,7 @@ a[data-toggle="collapse"] {
 }.form-container h2{text-align: center;}
 .statistic div.col-sm-4{color: #fff;border: 2px solid #fff;
     padding: 1rem;
-    font-size: 29px;}/*!
- * Start Bootstrap - Blog Post (https://startbootstrap.com/template-overviews/blog-post)
- * Copyright 2013-2019 Start Bootstrap
- * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-blog-post/blob/master/LICENSE)
- */
-body {
-  padding-top: 56px;
-}
-@charset "UTF-8";
+    font-size: 29px;}@charset "UTF-8";
 
 /*!
  * Bootstrap v4.6.0 (https://getbootstrap.com/)
