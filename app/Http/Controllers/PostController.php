@@ -14,7 +14,14 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::latest()
+            ->with('user')
+            ->withCount('comments')
+            ->get()->map(function ($post) {
+                $post->setAttribute('added_at', $post->created_at->diffForHumans());
+                return $post;
+            });
+        return response()->json($posts);
     }
 
     /**
