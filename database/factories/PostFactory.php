@@ -11,7 +11,7 @@ $factory->define(Post::class, function (Faker $faker) {
     return [
         'title' => $faker->text(50),
         'slug' => $faker->unique()->slug(),
-        'body' => $faker->text(500),
+        'body' => '<p>' . $faker->text(500) . '</p>',
         'image' => 'storage/images/posts/' . $faker->image('public/storage/images/posts', 640, 480, null, false),
         'user_id' => User::all()->random()->id,
         'category_id' => Category::all()->random()->id,

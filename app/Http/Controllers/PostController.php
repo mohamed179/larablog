@@ -53,7 +53,22 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        $comments = $post->comments->map(function ($comment) {
+            $comment->setAttribute('user', $comment->user);
+            return $comment;
+        });
+
+        return response()->json([
+            'title' => $post->title,
+            'body' => $post->body,
+            'slug' => $post->slug,
+            'image' => $post->image,
+            'added_at' => $post->created_at->diffForHumans(),
+            'comments_count' => $comments->count(),
+            'category' => $post->category,
+            'user' => $post->user,
+            'comments' => $comments,
+        ]);
     }
 
     /**
