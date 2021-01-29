@@ -71,6 +71,10 @@ export default {
     mounted() {
         this.getPost();
     },
+    beforeRouteUpdate (to, from, next) {
+        this.post = {};
+        this.getPost();
+    },
     methods: {
         getPost() {
             axios.get("/api/posts/" + this.$route.params.slug)

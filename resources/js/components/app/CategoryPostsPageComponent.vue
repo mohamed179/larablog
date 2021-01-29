@@ -1,8 +1,8 @@
 <template>
     <div>
         <h1 class="my-4">
-            Larablog
-            <small>This week posts</small>
+            Category: {{ category.name }}
+            <small>posts</small>
         </h1>
         <!-- Blog Post -->
         <div class="media simple-post" v-for="post in posts" :key="post.id">
@@ -73,17 +73,25 @@
 export default {
     data() {
         return {
+            category: {},
             posts: [],
         };
     },
-    mounted() {
+    mounted (to, from, next) {
+        this.getPosts();
+    },
+    beforeRouteUpdate (to, from, next) {
+        this.category = {};
+        this.posts = [];
+        next();
         this.getPosts();
     },
     methods: {
         getPosts() {
-            axios.get("/api/posts")
-                .then((result) => {
-                    this.posts = result.data;
+            axios.get("/api/categories/" + this.$route.params.slug)
+                .then((result) => {console.log(result);
+                    this.category = result.data.category;
+                    this.posts = result.data.posts;
                 })
                 .catch((error) => {
                     console.error(error);

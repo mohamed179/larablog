@@ -14,7 +14,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::has('posts')->get();
+        return response()->json($categories);
     }
 
     /**
@@ -46,7 +47,17 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        $posts = $category->posts->map(function ($post) {
+            $post->setAttribute('user', $post->user);
+            $post->setAttribute('comments_count', $post->comments->count());
+            $post->setAttribute('added_at', $post->created_at->diffForHumans());
+            return $post;
+        });
+
+        return response()->json([
+            'category' => $category,
+            'posts' => $posts,
+        ]);
     }
 
     /**
