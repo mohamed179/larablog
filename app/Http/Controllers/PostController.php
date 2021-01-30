@@ -104,4 +104,30 @@ class PostController extends Controller
     {
         //
     }
+
+    /**
+     * Search posts according to a query
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        $query = $request->query('query');
+        if ($query) {
+            $posts = Post::where('title', 'LIKE', '%' . $query . '%')
+                ->orWhere('body', 'LIKE', '%' . $query . '%')
+                ->with('user')
+                ->withCount('comments')
+                ->get()->map(function ($post) {
+                    $post->setAttribute('added_at', $post->created_at->diffForHumans());
+                    return $post;
+                });
+            return response()->json($posts);
+        } else {
+            return response()->json([
+                'error' => 'No search query provided!'
+            ], 400);
+        }
+    }
 }
