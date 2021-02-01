@@ -17,7 +17,10 @@ class PostController extends Controller
         $posts = Post::latest()
             ->with('user')
             ->withCount('comments')
-            ->get()->map(function ($post) {
+            ->paginate(5);
+
+        $posts->getCollection()
+            ->transform(function ($post) {
                 $post->setAttribute('added_at', $post->created_at->diffForHumans());
                 return $post;
             });
@@ -119,7 +122,10 @@ class PostController extends Controller
                 ->orWhere('body', 'LIKE', '%' . $query . '%')
                 ->with('user')
                 ->withCount('comments')
-                ->get()->map(function ($post) {
+                ->paginate(5);
+
+            $posts->getCollection()
+                ->transform(function ($post) {
                     $post->setAttribute('added_at', $post->created_at->diffForHumans());
                     return $post;
                 });

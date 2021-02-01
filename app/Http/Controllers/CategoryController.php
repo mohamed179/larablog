@@ -47,9 +47,12 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        $posts = $category->posts->map(function ($post) {
-            $post->setAttribute('user', $post->user);
-            $post->setAttribute('comments_count', $post->comments->count());
+        $posts = $category->posts()
+            ->with('user')
+            ->withCount('comments')
+            ->paginate(5);
+
+        $posts->getCollection()->transform(function ($post) {
             $post->setAttribute('added_at', $post->created_at->diffForHumans());
             return $post;
         });

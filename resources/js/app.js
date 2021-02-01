@@ -23,6 +23,7 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('app-component', require('./components/app/AppComponent.vue').default);
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 import router from './routes/app';
 

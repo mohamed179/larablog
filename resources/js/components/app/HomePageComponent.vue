@@ -4,8 +4,13 @@
             Larablog
             <small>This week posts</small>
         </h1>
+        <div class="mb-2" v-if="posts.last_page && posts.total > 0">
+            <span v-if="$route.query.page">Page {{ $route.query.page }} of {{ posts.last_page }}</span>
+            <span v-else-if="posts.last_page">Page 1 of {{ posts.last_page }}</span>
+        </div>
+        <hr v-if="posts.last_page && posts.total > 0">
         <!-- Blog Post -->
-        <div class="media simple-post" v-for="post in posts" :key="post.id">
+        <div class="media simple-post" v-for="post in posts.data" :key="post.id">
             <img class="mr-3"
                  :src="'/' + post.image"
                  :alt="post.title">
@@ -44,28 +49,10 @@
             </div>
         </div>
         <!-- Pagination -->
-        <nav aria-label="...">
-            <ul class="pagination float-right">
-                <li class="page-item disabled">
-                    <span class="page-link">Previous</span>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">1</a>
-                </li>
-                <li class="page-item active">
-                    <span class="page-link">
-                        2
-                        <span class="sr-only">(current)</span>
-                    </span>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">3</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Next</a>
-                </li>
-            </ul>
-        </nav>
+        <pagination :data="posts" @pagination-change-page="changePage">
+            <span slot="prev-nav">&lt; Previous</span>
+            <span slot="next-nav">Next &gt;</span>
+        </pagination>
     </div>
 </template>
 
@@ -73,15 +60,34 @@
 export default {
     data() {
         return {
-            posts: [],
+            posts: {},
         };
     },
     mounted() {
+        if (this.$route.query.page) {
+            this.getPosts(this.$route.query.page);
+        } else {
+            this.getPosts();
+        }
+    },
+    beforeRouteUpdate (to, from, next) {
+        this.category = {};
+        this.posts = {};
+        next();
         this.getPosts();
     },
     methods: {
+        changePage(page = 1) {
+            if (page != this.$route.query.page) {
+                this.$router.push({
+                    query: {
+                        page,
+                    }
+                });
+            }
+        },
         getPosts() {
-            axios.get("/api/posts")
+            axios.get("/api/posts?page=" + this.$route.query.page)
                 .then((result) => {
                     this.posts = result.data;
                 })

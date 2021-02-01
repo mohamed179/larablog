@@ -55,7 +55,7 @@
                  :alt="comment.user.name">
             <div class="media-body">
                 <h5 class="mt-0">{{ comment.user.name }}</h5>
-                <p>{{ comment.body }}</p>
+                <p>{{ comment.body }}({{comment.user.profile_img}})</p>
             </div>
         </div>
     </div>
